@@ -38,12 +38,12 @@ git clone https://github.com/ouzo-zip/zetamac-ouzo-edition.git
 2.  Open `index.html` in your web browser.
 
 ## How to Play
-
-1.  Select your desired game options (operations, ranges, time limit).
-2.  Optionally, select a specific technique to practice from the dropdown menu.
-3.  Click the "Start Game" button.
-4.  The game will start, and you can type in your answers. The game will automatically proceed to the next question when you enter the correct answer.
-5.  When the time is up, your score will be displayed.
+1.  [Go here](https://ouzo-zip.github.io/zetamac-ouzo-edition/).
+2.  Select your desired game options (operations, ranges, time limit).
+3.  Optionally, select a specific technique to practice from the dropdown menu.
+4.  Click the "Start Game" button.
+5.  The game will start, and you can type in your answers. The game will automatically proceed to the next question when you enter the correct answer.
+6.  When the time is up, your score will be displayed.
 
 This project is built with plain HTML, CSS, and JavaScript, keeping it simple and lightweight.
 
