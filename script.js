@@ -383,3 +383,30 @@ changeSettingsBtn.addEventListener('click', () => {
 });
 
 startBtn.addEventListener('click', startGame);
+
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const sunIcon = document.getElementById('sun-icon');
+const moonIcon = document.getElementById('moon-icon');
+const body = document.body;
+
+function setDarkMode(isDark) {
+    if (isDark) {
+        body.classList.add('dark-mode');
+        sunIcon.classList.add('hidden');
+        moonIcon.classList.remove('hidden');
+        localStorage.setItem('darkMode', 'enabled');
+    } else {
+        body.classList.remove('dark-mode');
+        sunIcon.classList.remove('hidden');
+        moonIcon.classList.add('hidden');
+        localStorage.removeItem('darkMode');
+    }
+}
+
+if (localStorage.getItem('darkMode') === 'enabled') {
+    setDarkMode(true);
+}
+
+darkModeToggle.addEventListener('click', () => {
+    setDarkMode(!body.classList.contains('dark-mode'));
+});
