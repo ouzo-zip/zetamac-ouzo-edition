@@ -13,7 +13,8 @@ This is a web-based arithmetic game inspired by the [original Zetamac Arithmetic
 - **Specific Techniques Practice:**
     - **The 11 Trick:** Practice multiplying or dividing by 11.
     - **Middle Number Trick:** Practice squaring the middle number and subtracting the square of the distance for two close even or odd numbers.
-    - **Squares Memorization (up to 30):** Practice squaring numbers up to 30.
+    - **Squares (up to 30):** Practice squaring numbers up to 30.
+    - **Square roots (up to 30):** Practice the inverse of squares.
     - **Powers of 2:** Practice calculating powers of 2 up to 2^30.
     - **Primes Times:** Practice multiplication tables of only prime numbers.
     - **The "Ending in 5" Square:** Practice squaring numbers ending in 5.

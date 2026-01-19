@@ -23,6 +23,7 @@ const descriptions = {
     '11-trick': 'x11: For a 2-digit number ab, the answer is a(a+b)b. If a+b > 9, carry the one. (e.g., 23 x 11 = 253) <br> ÷11: For a 3-digit number abc, if a+c=b, the answer is ac. (e.g., 583 / 11 = 53)',
     'middle-number': 'For two close even/odd numbers, find the middle number, square it, and subtract the square of the distance. (e.g., 18 * 22 = 20^2 - 2^2 = 396)',
     'squares': 'Calculate the square of the given number. (e.g., 25 * 25 = 625)',
+    'square-roots': 'Calculate the square root of the given number. (e.g., √625 = 25)',
     'powers-of-2': 'Calculate the given power of 2. (e.g., 2^10 = 1024)',
     'primes-times': 'Calculate the product of the two prime numbers.',
     'ending-in-5': 'To square a number ending in 5 (e.g., N5), take N, calculate N*(N+1) and append 25. (e.g., 85*85 -> 8*9=72 -> 7225)',
@@ -122,6 +123,9 @@ function generateProblem() {
             break;
         case 'squares':
             generateSquaresProblem();
+            break;
+        case 'square-roots':
+            generateSquareRootsProblem();
             break;
         case 'powers-of-2':
             generatePowersOf2Problem();
@@ -235,6 +239,14 @@ function generateSquaresProblem() {
     const num = generateNumber(1, 30);
     const answer = num * num;
     const text = `${num} × ${num}`;
+    currentProblem = { text, answer };
+    problemElement.textContent = currentProblem.text;
+}
+
+function generateSquareRootsProblem() {
+    const num = generateNumber(1, 30);
+    const answer = num;
+    const text = `√${num * num}`;
     currentProblem = { text, answer };
     problemElement.textContent = currentProblem.text;
 }
