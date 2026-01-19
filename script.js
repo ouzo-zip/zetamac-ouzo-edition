@@ -15,6 +15,8 @@ const changeSettingsBtn = document.getElementById('change-settings-btn');
 const techniqueSelect = document.getElementById('technique-select');
 const techniqueDescription = document.getElementById('technique-description');
 const operationSettings = document.getElementById('operation-settings');
+const mobileModeCheckbox = document.getElementById('mobile-mode-checkbox');
+const mobileOptionsContainer = document.getElementById('mobile-options');
 
 
 const descriptions = {
@@ -74,9 +76,11 @@ let isUntimed = false;
 let enabledOperations = [];
 let settings = {};
 let selectedTechnique = 'custom';
+let isMobileMode = false;
 
 function getSettings() {
     selectedTechnique = techniqueSelect.value;
+    isMobileMode = mobileModeCheckbox.checked;
 
     if (selectedTechnique === 'custom') {
         enabledOperations = Array.from(opCheckboxes)
@@ -144,6 +148,9 @@ function generateProblem() {
         default:
             generateCustomProblem();
             break;
+    }
+    if (isMobileMode) {
+        generateMobileOptions();
     }
 }
 
@@ -306,6 +313,41 @@ function generateTimes12Problem() {
     problemElement.textContent = currentProblem.text;
 }
 
+function generateMobileOptions() {
+    const options = [currentProblem.answer];
+    while (options.length < 4) {
+        const wrongAnswer = currentProblem.answer + generateNumber(-10, 10);
+        if (!options.includes(wrongAnswer) && wrongAnswer !== currentProblem.answer) {
+            options.push(wrongAnswer);
+        }
+    }
+    
+    // Shuffle options
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
+
+    mobileOptionsContainer.innerHTML = '';
+    options.forEach(option => {
+        const button = document.createElement('button');
+        button.textContent = option;
+        button.addEventListener('click', handleMobileAnswer);
+        mobileOptionsContainer.appendChild(button);
+    });
+}
+
+function handleMobileAnswer(event) {
+    const selectedAnswer = parseInt(event.target.textContent, 10);
+    if (selectedAnswer === currentProblem.answer) {
+        score++;
+    } else {
+        score--;
+    }
+    scoreElement.textContent = score;
+    generateProblem();
+}
+
 function handleInput() {
     if (answerElement.value === currentProblem.answer.toString()) {
         score++;
@@ -344,12 +386,19 @@ function startGame() {
     gameOverElement.classList.add('hidden');
     gameElement.classList.remove('hidden');
     statsElement.classList.remove('hidden');
-    answerElement.style.display = 'inline-block';
     answerElement.value = '';
-    answerElement.focus();
+    
+    if (isMobileMode) {
+        answerElement.style.display = 'none';
+        mobileOptionsContainer.classList.remove('hidden');
+    } else {
+        answerElement.style.display = 'inline-block';
+        mobileOptionsContainer.classList.add('hidden');
+        answerElement.focus();
+        answerElement.addEventListener('input', handleInput);
+    }
     
     generateProblem();
-    answerElement.addEventListener('input', handleInput);
 
     if (!isUntimed) {
         timer = setInterval(() => {
@@ -365,6 +414,11 @@ function startGame() {
 function endGame() {
     clearInterval(timer);
     answerElement.removeEventListener('input', handleInput);
+    
+    const mobileButtons = mobileOptionsContainer.querySelectorAll('button');
+    mobileButtons.forEach(button => {
+        button.removeEventListener('click', handleMobileAnswer);
+    });
 
     gameElement.classList.add('hidden');
     statsElement.classList.add('hidden');

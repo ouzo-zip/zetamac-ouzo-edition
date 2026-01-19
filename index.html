@@ -61,12 +61,17 @@
             </select>
         </div>
 
+        <div id="mobile-mode-option">
+            <label><input type="checkbox" id="mobile-mode-checkbox"> Mobile mode</label>
+        </div>
+
         <button id="start-btn">Start Game</button>
     </div>
     <div id="game" class="hidden">
         <div id="technique-description" class="hidden"></div>
         <div id="problem"></div>
-        <input type="text" id="answer" autofocus autocomplete="off">
+        <input type="tel" id="answer" autofocus autocomplete="off" inputmode="numeric">
+        <div id="mobile-options" class="hidden"></div>
     </div>
     <div id="stats" class="hidden">
         <span>Score: <span id="score">0</span></span>
