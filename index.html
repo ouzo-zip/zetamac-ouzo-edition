@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zetamac Clone - Ouzo Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 class="main-title">Zetamac Arithmetic Game - ouzo edition</h1>
+    <div id="setup">
+        <div id="operation-settings">
+            <div class="operation-group">
+                <label><input type="checkbox" name="op" value="add" checked> Addition:</label>
+                (<input type="number" id="add-min1" value="2" min="1"> to <input type="number" id="add-max1" value="100">) + 
+                (<input type="number" id="add-min2" value="2" min="1"> to <input type="number" id="add-max2" value="100">)
+            </div>
+            <div class="operation-group">
+                <label><input type="checkbox" name="op" value="subtract" checked> Subtraction</label> (Addition problems in reverse)
+            </div>
+            <div class="operation-group">
+                <label><input type="checkbox" name="op" value="multiply" checked> Multiplication:</label>
+                (<input type="number" id="mul-min1" value="2" min="1"> to <input type="number" id="mul-max1" value="12">) × 
+                (<input type="number" id="mul-min2" value="2" min="1"> to <input type="number" id="mul-max2" value="100">)
+            </div>
+            <div class="operation-group">
+                <label><input type="checkbox" name="op" value="divide" checked> Division</label> (Multiplication problems in reverse)
+            </div>
+        </div>
+
+        <div id="technique-options">
+            <label for="technique-select">Specific techniques:</label>
+            <select id="technique-select">
+                <option value="custom" selected>Custom</option>
+                <option value="11-trick">The 11 Trick</option>
+                <option value="middle-number">Middle Number Trick</option>
+                <option value="squares">Squares (up to 30)</option>
+                <option value="powers-of-2">Powers of 2</option>
+                <option value="primes-times">Primes Times</option>
+                <option value="ending-in-5">Ending in 5 Square</option>
+                <option value="ghost-100">Ghost 100</option>
+                <option value="double-halve">Double and Halve</option>
+                <option value="quarters">Quarters Strategy</option>
+                <option value="times-12">Multiplying by 12</option>
+            </select>
+        </div>
+
+        <div id="time-options">
+            <label for="time-select">Time limit:</label>
+            <select id="time-select">
+                <option value="30">30 seconds</option>
+                <option value="60">60 seconds</option>
+                <option value="120" selected>120 seconds</option>
+                <option value="300">300 seconds</option>
+                <option value="600">600 seconds</option>
+                <option value="0">Untimed</option>
+            </select>
+        </div>
+
+        <button id="start-btn">Start Game</button>
+    </div>
+    <div id="game" class="hidden">
+        <div id="technique-description" class="hidden"></div>
+        <div id="problem"></div>
+        <input type="text" id="answer" autofocus autocomplete="off">
+    </div>
+    <div id="stats" class="hidden">
+        <span>Score: <span id="score">0</span></span>
+        <span>Time: <span id="timer">60</span></span>
+    </div>
+
+    <div id="game-over" class="hidden">
+        <div id="final-score"></div>
+        <div id="final-stats"></div>
+        <button id="try-again-btn">Try again</button>
+        <button id="change-settings-btn">Change settings</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

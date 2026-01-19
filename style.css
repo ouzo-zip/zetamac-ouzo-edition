@@ -1,0 +1,100 @@
+body {
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+#setup {
+    text-align: center;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    padding: 20px;
+    background-color: #fff;
+}
+
+#operation-settings {
+    margin: 20px 0;
+    text-align: left;
+    display: inline-block;
+}
+
+.operation-group {
+    margin-bottom: 10px;
+}
+
+.operation-group input[type="number"] {
+    width: 60px;
+    font-family: monospace;
+    font-size: 1em;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+.operation-group input[type="number"]::-webkit-outer-spin-button,
+.operation-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+#technique-options {
+    margin-top: 20px;
+}
+
+#time-options {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#technique-description {
+    font-size: 1.2em;
+    margin-bottom: 40px;
+}
+
+#game {
+    text-align: center;
+}
+
+#problem {
+    font-size: 4em;
+    margin-bottom: 40px;
+}
+
+#answer {
+    font-family: monospace;
+    font-size: 2.5em;
+    width: 300px;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+#stats {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.2em;
+}
+
+#game-over {
+    text-align: center;
+}
+
+#final-score {
+    font-size: 5em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hidden {
+    display: none;
+}
