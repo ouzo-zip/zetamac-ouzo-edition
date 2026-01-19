@@ -24,6 +24,9 @@ This is a web-based arithmetic game inspired by the [original Zetamac Arithmetic
 - **Streamlined Gameplay:**
     - No need to press Enter; answers are submitted as you type.
     - Clean, minimalist, monospace interface
+- **Mobile Mode:**
+    - When playing on mobile instead of having to input numbers you can select out of four options.
+    - Points will be +1 for correct answers and -1 for incorrect.
 
 ## Running Locally
 
