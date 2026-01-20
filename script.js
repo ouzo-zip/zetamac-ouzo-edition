@@ -109,8 +109,14 @@ function getSettings() {
 }
 
 
+function secureRandom() {
+    const randomValues = new Uint32Array(1);
+    crypto.getRandomValues(randomValues);
+    return randomValues[0] / (Math.pow(2, 32) - 1);
+}
+
 function generateNumber(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(secureRandom() * (max - min + 1)) + min;
 }
 
 function generateProblem() {
@@ -178,7 +184,7 @@ function generateCustomProblem() {
             const add1 = generateNumber(settings.add.min1, settings.add.max1);
             const add2 = generateNumber(settings.add.min2, settings.add.max2);
             num1 = add1 + add2;
-            num2 = Math.random() > 0.5 ? add1 : add2;
+            num2 = secureRandom() > 0.5 ? add1 : add2;
             answer = num1 - num2;
             text = `${num1} - ${num2}`;
             break;
@@ -192,7 +198,7 @@ function generateCustomProblem() {
             const mul1 = generateNumber(settings.mul.min1, settings.mul.max1);
             const mul2 = generateNumber(settings.mul.min2, settings.mul.max2);
             num1 = mul1 * mul2;
-            num2 = Math.random() > 0.5 ? mul1 : mul2;
+            num2 = secureRandom() > 0.5 ? mul1 : mul2;
             if (num2 === 0) num2 = 1; // Avoid division by zero
             answer = num1 / num2;
             text = `${num1} ÷ ${num2}`;
@@ -204,7 +210,7 @@ function generateCustomProblem() {
 }
 
 function generate11TrickProblem() {
-    const operation = Math.random() > 0.5 ? 'multiply' : 'divide';
+    const operation = secureRandom() > 0.5 ? 'multiply' : 'divide';
     let num1, num2, answer, text;
 
     if (operation === 'multiply') {
@@ -309,7 +315,7 @@ function generateQuartersProblem() {
     else {
         otherNum = generateNumber(1, 20) * 4;
     }
-    const num1 = Math.random() > 0.5 ? quarter : otherNum;
+    const num1 = secureRandom() > 0.5 ? quarter : otherNum;
     const num2 = num1 === quarter ? otherNum : quarter;
     const answer = num1 * num2;
     const text = `${num1} × ${num2}`;
@@ -336,7 +342,7 @@ function generateMobileOptions() {
     
     // Shuffle options
     for (let i = options.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+        const j = Math.floor(secureRandom() * (i + 1));
         [options[i], options[j]] = [options[j], options[i]];
     }
 
