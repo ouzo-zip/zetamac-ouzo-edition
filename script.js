@@ -87,6 +87,8 @@ function getSettings() {
         enabledOperations = Array.from(opCheckboxes)
             .filter(cb => cb.checked)
             .map(cb => cb.value);
+    } else {
+        enabledOperations = [];
     }
     if (selectedTechnique === 'primes-times' && primes.length === 0) {
         primes = getPrimes(100); // Generate primes up to 100
