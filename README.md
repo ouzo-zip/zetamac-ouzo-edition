@@ -28,6 +28,10 @@ This is a web-based arithmetic game inspired by the [original Zetamac Arithmetic
 - **Mobile Mode:**
     - When playing on mobile instead of having to input numbers you can select out of four options.
     - Points will be +1 for correct answers and -1 for incorrect.
+- **Weakness Mode:**
+    - App now tracks which pairs of numbers user finds difficulty with (set to be defined as taking >1.5 seconds to answer correctly).
+    - Weakness mode selected from the dropdown will result in the user playing a game with _only_ the questions they have found hard in the past.
+    - Results can be exported and imported if moving between browsers or computers.
 
 ## Running Locally
 

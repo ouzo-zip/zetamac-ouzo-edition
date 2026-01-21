@@ -208,6 +208,26 @@ body.dark-mode #mobile-options button {
 
 body.dark-mode #mobile-options button:hover {
 
+
+
     background-color: #555;
+
+
+
+}
+
+
+
+
+
+
+
+#results-io button {
+
+
+
+    margin-right: 10px;
+
+
 
 }

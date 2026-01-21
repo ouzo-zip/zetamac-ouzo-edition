@@ -17,6 +17,9 @@ const techniqueDescription = document.getElementById('technique-description');
 const operationSettings = document.getElementById('operation-settings');
 const mobileModeCheckbox = document.getElementById('mobile-mode-checkbox');
 const mobileOptionsContainer = document.getElementById('mobile-options');
+const exportBtn = document.getElementById('export-btn');
+const importBtn = document.getElementById('import-btn');
+const importFile = document.getElementById('import-file');
 
 
 const descriptions = {
@@ -30,7 +33,8 @@ const descriptions = {
     'ghost-100': 'For two numbers near 100, add one number to the other\'s distance from 100. Multiply the distances for the last two digits. (e.g., 96 * 97 -> 96+(-3)=93; (-4)*(-3)=12 -> 9312)',
     'double-halve': 'Half the even number, double the other number, then multiply. (e.g., 48 * 15 -> 24 * 30 = 720)',
     'quarters': 'Use fractions: 25=100/4, 50=100/2, 75=3*100/4, 125=1000/8.',
-    'times-12': 'Multiply the number by 10, multiply it by 2, and add the results. (e.g., 45 * 12 = 450 + 90 = 540)'
+    'times-12': 'Multiply the number by 10, multiply it by 2, and add the results. (e.g., 45 * 12 = 450 + 90 = 540)',
+    'weakness': 'Practice the problems you have been slowest on.'
 };
 
 let primes = [];
@@ -46,6 +50,20 @@ function getPrimes(max) {
         }
     }
     return primesList;
+}
+
+let weaknesses = [];
+let currentProblemStartTime;
+
+function loadWeaknesses() {
+    const weaknessesJSON = localStorage.getItem('weaknesses');
+    if (weaknessesJSON) {
+        weaknesses = JSON.parse(weaknessesJSON);
+    }
+}
+
+function saveWeaknesses() {
+    localStorage.setItem('weaknesses', JSON.stringify(weaknesses));
 }
 
 
@@ -122,45 +140,53 @@ function generateNumber(min, max) {
 }
 
 function generateProblem() {
+    let problem;
     switch (selectedTechnique) {
         case '11-trick':
-            generate11TrickProblem();
+            problem = generate11TrickProblem();
             break;
         case 'middle-number':
-            generateMiddleNumberTrickProblem();
+            problem = generateMiddleNumberTrickProblem();
             break;
         case 'squares':
-            generateSquaresProblem();
+            problem = generateSquaresProblem();
             break;
         case 'square-roots':
-            generateSquareRootsProblem();
+            problem = generateSquareRootsProblem();
             break;
         case 'powers-of-2':
-            generatePowersOf2Problem();
+            problem = generatePowersOf2Problem();
             break;
         case 'primes-times':
-            generatePrimesTimesProblem();
+            problem = generatePrimesTimesProblem();
             break;
         case 'ending-in-5':
-            generateEndingIn5Problem();
+            problem = generateEndingIn5Problem();
             break;
         case 'ghost-100':
-            generateGhost100Problem();
+            problem = generateGhost100Problem();
             break;
         case 'double-halve':
-            generateDoubleAndHalveProblem();
+            problem = generateDoubleAndHalveProblem();
             break;
         case 'quarters':
-            generateQuartersProblem();
+            problem = generateQuartersProblem();
             break;
         case 'times-12':
-            generateTimes12Problem();
+            problem = generateTimes12Problem();
+            break;
+        case 'weakness':
+            problem = generateWeaknessProblem();
             break;
         case 'custom':
         default:
-            generateCustomProblem();
+            problem = generateCustomProblem();
             break;
     }
+    currentProblem = problem;
+    problemElement.textContent = currentProblem.text;
+    currentProblemStartTime = Date.now();
+
     if (isMobileMode) {
         generateMobileOptions();
     }
@@ -169,7 +195,7 @@ function generateProblem() {
 function generateCustomProblem() {
     if (enabledOperations.length === 0) {
         problemElement.textContent = "Select an operation.";
-        return;
+        return { text: "Select an operation.", answer: '' };
     }
 
     const operation = enabledOperations[generateNumber(0, enabledOperations.length - 1)];
@@ -207,8 +233,7 @@ function generateCustomProblem() {
             break;
     }
 
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: operation, operands: [num1, num2] };
 }
 
 function generate11TrickProblem() {
@@ -228,8 +253,7 @@ function generate11TrickProblem() {
         text = `${num1} ÷ ${num2}`;
     }
 
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: '11-trick', operands: [num1, num2] };
 }
 
 function generateMiddleNumberTrickProblem() {
@@ -239,32 +263,28 @@ function generateMiddleNumberTrickProblem() {
     const num2 = middle + distance;
     const answer = num1 * num2;
     const text = `${num1} × ${num2}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'middle-number', operands: [num1, num2] };
 }
 
 function generateSquaresProblem() {
     const num = generateNumber(1, 30);
     const answer = num * num;
     const text = `${num} × ${num}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'squares', operands: [num] };
 }
 
 function generateSquareRootsProblem() {
     const num = generateNumber(1, 30);
     const answer = num;
     const text = `√${num * num}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'square-roots', operands: [num * num] };
 }
 
 function generatePowersOf2Problem() {
     const power = generateNumber(1, 30);
     const answer = Math.pow(2, power);
     const text = `2^${power}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'powers-of-2', operands: [power] };
 }
 
 function generatePrimesTimesProblem() {
@@ -272,8 +292,7 @@ function generatePrimesTimesProblem() {
     const prime2 = primes[generateNumber(0, primes.length - 1)];
     const answer = prime1 * prime2;
     const text = `${prime1} × ${prime2}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'primes-times', operands: [prime1, prime2] };
 }
 
 function generateEndingIn5Problem() {
@@ -281,8 +300,7 @@ function generateEndingIn5Problem() {
     const num = n * 10 + 5;
     const answer = num * num;
     const text = `${num} × ${num}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'ending-in-5', operands: [num] };
 }
 
 function generateGhost100Problem() {
@@ -292,8 +310,7 @@ function generateGhost100Problem() {
     const num2 = 100 - dist2;
     const answer = num1 * num2;
     const text = `${num1} × ${num2}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'ghost-100', operands: [num1, num2] };
 }
 
 function generateDoubleAndHalveProblem() {
@@ -301,8 +318,7 @@ function generateDoubleAndHalveProblem() {
     const numEndingIn5 = generateNumber(1, 5) * 10 - 5;
     const answer = evenNum * numEndingIn5;
     const text = `${evenNum} × ${numEndingIn5}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'double-halve', operands: [evenNum, numEndingIn5] };
 }
 
 function generateQuartersProblem() {
@@ -321,17 +337,91 @@ function generateQuartersProblem() {
     const num2 = num1 === quarter ? otherNum : quarter;
     const answer = num1 * num2;
     const text = `${num1} × ${num2}`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'quarters', operands: [num1, num2] };
 }
 
 function generateTimes12Problem() {
     const num = generateNumber(10, 99);
     const answer = num * 12;
     const text = `${num} × 12`;
-    currentProblem = { text, answer };
-    problemElement.textContent = currentProblem.text;
+    return { text, answer, type: 'times-12', operands: [num] };
 }
+
+function generateWeaknessProblem() {
+    if (weaknesses.length === 0) {
+        return { text: "No weaknesses found. Practice more!", answer: '' };
+    }
+    const weakProblem = weaknesses[generateNumber(0, weaknesses.length - 1)];
+    let text, answer;
+
+    const [num1, num2] = weakProblem.operands;
+
+    switch (weakProblem.type) {
+        case 'add':
+            answer = num1 + num2;
+            text = `${num1} + ${num2}`;
+            break;
+        case 'subtract':
+            answer = num1 - num2;
+            text = `${num1} - ${num2}`;
+            break;
+        case 'multiply':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'divide':
+            answer = num1 / num2;
+            text = `${num1} ÷ ${num2}`;
+            break;
+        case '11-trick':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'middle-number':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'squares':
+            answer = num1 * num1;
+            text = `${num1} × ${num1}`;
+            break;
+         case 'square-roots':
+            answer = Math.sqrt(num1);
+            text = `√${num1}`;
+            break;
+        case 'powers-of-2':
+            answer = Math.pow(2, num1);
+            text = `2^${num1}`;
+            break;
+         case 'primes-times':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'ending-in-5':
+            answer = num1 * num1;
+            text = `${num1} × ${num1}`;
+            break;
+        case 'ghost-100':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'double-halve':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'quarters':
+            answer = num1 * num2;
+            text = `${num1} × ${num2}`;
+            break;
+        case 'times-12':
+            answer = num1 * 12;
+            text = `${num1} × 12`;
+            break;
+    }
+
+    return { text, answer, type: weakProblem.type, operands: weakProblem.operands };
+}
+
 
 function generateMobileOptions() {
     const options = [currentProblem.answer];
@@ -370,6 +460,19 @@ function handleMobileAnswer(event) {
 
 function handleInput() {
     if (answerElement.value === currentProblem.answer.toString()) {
+        const timeTaken = Date.now() - currentProblemStartTime;
+        if (timeTaken > 1500 && currentProblem.type) {
+            // Avoid duplicates
+            const isDuplicate = weaknesses.some(w => 
+                w.type === currentProblem.type && 
+                JSON.stringify(w.operands) === JSON.stringify(currentProblem.operands)
+            );
+            if (!isDuplicate) {
+                weaknesses.push({ type: currentProblem.type, operands: currentProblem.operands });
+                saveWeaknesses();
+            }
+        }
+
         score++;
         scoreElement.textContent = score;
         answerElement.value = '';
@@ -383,6 +486,11 @@ function startGame() {
 
     if (selectedTechnique === 'custom' && enabledOperations.length === 0) {
         alert("Please select at least one operation to start the game.");
+        return;
+    }
+
+    if (selectedTechnique === 'weakness' && weaknesses.length === 0) {
+        alert("No weaknesses found. Practice other modes to identify some!");
         return;
     }
     
@@ -448,6 +556,48 @@ function endGame() {
     gameOverElement.classList.remove('hidden');
 }
 
+function exportResults() {
+    const data = localStorage.getItem('weaknesses');
+    if (!data) {
+        alert("No results to export!");
+        return;
+    }
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'zetamac_weaknesses.json';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+function importResults() {
+    importFile.click();
+}
+
+importFile.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const importedData = JSON.parse(e.target.result);
+                if (Array.isArray(importedData)) {
+                    localStorage.setItem('weaknesses', JSON.stringify(importedData));
+                    loadWeaknesses();
+                    alert("Results imported successfully!");
+                } else {
+                    alert("Invalid file format.");
+                }
+            } catch (error) {
+                alert("Error reading file. Make sure it's a valid JSON file.");
+            }
+        };
+        reader.readAsText(file);
+    }
+});
+
+
 tryAgainBtn.addEventListener('click', startGame);
 
 changeSettingsBtn.addEventListener('click', () => {
@@ -457,6 +607,8 @@ changeSettingsBtn.addEventListener('click', () => {
 });
 
 startBtn.addEventListener('click', startGame);
+exportBtn.addEventListener('click', exportResults);
+importBtn.addEventListener('click', importResults);
 
 const darkModeToggle = document.getElementById('dark-mode-toggle');
 const sunIcon = document.getElementById('sun-icon');
@@ -484,3 +636,6 @@ if (localStorage.getItem('darkMode') === 'enabled') {
 darkModeToggle.addEventListener('click', () => {
     setDarkMode(!body.classList.contains('dark-mode'));
 });
+
+// Load weaknesses on startup
+loadWeaknesses();
